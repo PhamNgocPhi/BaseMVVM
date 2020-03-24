@@ -5,9 +5,8 @@ import com.example.basemvvm.data.model.CategoryResponse
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
 
-class ApiRepository @Inject constructor(private val apiRepository: IApiRepository) {
+class ApiRepository(val apiRepository: IApiRepository) {
 
     fun getListCategory(): Single<ApiObjectResponse<CategoryResponse>> {
         return apiRepository.getListCategory()

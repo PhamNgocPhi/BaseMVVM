@@ -1,24 +1,23 @@
 package com.example.basemvvm
 
-import com.example.basemvvm.di.component.AppComponent
-import com.example.basemvvm.di.component.DaggerAppComponent
-import dagger.android.AndroidInjector
-import dagger.android.support.DaggerApplication
+import android.app.Application
+import com.example.basemvvm.di.dataModule
+import com.example.basemvvm.di.networkModule
+import com.example.basemvvm.di.viewModelModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
-class AppApplication : DaggerApplication(){
-
-    lateinit var instance : AppApplication
+class AppApplication : Application(){
 
     override fun onCreate() {
         super.onCreate()
-        instance = this
+        startKoin {
+            androidLogger()
+            androidContext(this@AppApplication)
+            modules(listOf(dataModule, viewModelModule, networkModule))
+        }
 
-    }
-
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        val component: AppComponent = DaggerAppComponent.builder().application(this).build()
-        component.inject(this)
-        return component
     }
 
 }

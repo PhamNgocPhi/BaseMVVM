@@ -1,9 +1,9 @@
 package com.example.basemvvm.ui.base
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.widget.Toast
 import androidx.annotation.LayoutRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
@@ -11,17 +11,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.basemvvm.utils.constants.ViewState
 import com.example.basemvvm.utils.network.NetworkEvent
 import com.example.basemvvm.utils.network.NetworkState
-import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.functions.Consumer
-import javax.inject.Inject
 
-abstract class BaseActivity<T : ViewDataBinding, M : BaseViewModel> : DaggerAppCompatActivity() {
+abstract class BaseActivity<T : ViewDataBinding, M : BaseViewModel> : AppCompatActivity() {
 
     protected lateinit var binding: T
     protected lateinit var viewModel: M
-
-    @Inject
-    protected lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @LayoutRes
     protected abstract fun layoutRes(): Int
@@ -40,7 +35,7 @@ abstract class BaseActivity<T : ViewDataBinding, M : BaseViewModel> : DaggerAppC
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, layoutRes());
         binding.lifecycleOwner = this
-        viewModel = ViewModelProvider(this, viewModelFactory).get(viewModelClass())
+        viewModel = ViewModelProvider(this).get(viewModelClass())
         initView()
         viewModel.viewState.observe(this, Observer { viewState ->
             viewState?.run {

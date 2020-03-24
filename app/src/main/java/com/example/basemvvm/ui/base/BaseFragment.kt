@@ -7,27 +7,22 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.basemvvm.utils.constants.ViewState
-import dagger.android.support.DaggerFragment
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-abstract class BaseFragment<T : ViewDataBinding, M : BaseViewModel> : DaggerFragment() {
+abstract class BaseFragment<T : ViewDataBinding, VM : BaseViewModel> : Fragment() {
 
     protected lateinit var binding: T
-    protected lateinit var viewModel: M
-    protected val sharedViewModel by activityViewModels<SharedViewModel>()
-
-    @Inject
-    protected lateinit var viewModelFactory: ViewModelProvider.Factory
+    protected lateinit var viewModel: VM
+    protected val sharedViewModel by sharedViewModel<SharedViewModel>()
 
     @LayoutRes
     protected abstract fun layoutRes(): Int
 
-    protected abstract fun viewModelClass(): Class<M>
+    protected abstract fun viewModelClass(): Class<VM>
 
     protected abstract fun handleViewState(viewState: Int)
 
@@ -40,7 +35,9 @@ abstract class BaseFragment<T : ViewDataBinding, M : BaseViewModel> : DaggerFrag
     ): View? {
         binding = DataBindingUtil.inflate(inflater, layoutRes(), container, false)
         binding.lifecycleOwner = viewLifecycleOwner
-        viewModel = ViewModelProvider(this, viewModelFactory).get(viewModelClass())
+
+        viewModel = ViewModelProvider(this).get(viewModelClass())
+
         return binding.root
     }
 

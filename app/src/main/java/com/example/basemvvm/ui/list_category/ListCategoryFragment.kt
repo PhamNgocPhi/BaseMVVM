@@ -7,6 +7,7 @@ import com.example.basemvvm.databinding.FragmentListCategoryBinding
 import com.example.basemvvm.ui.adapter.ListCategoryAdapter
 import com.example.basemvvm.ui.base.BaseFragment
 import com.example.basemvvm.utils.constants.ViewState
+import org.koin.androidx.viewmodel.compat.ScopeCompat.viewModel
 
 /**
  * A simple [Fragment] subclass.
