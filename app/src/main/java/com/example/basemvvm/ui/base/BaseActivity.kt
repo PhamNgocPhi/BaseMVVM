@@ -13,11 +13,12 @@ import com.example.basemvvm.utils.network.NetworkEvent
 import com.example.basemvvm.utils.network.NetworkState
 import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.functions.Consumer
+import timber.log.Timber
 import javax.inject.Inject
 
 abstract class BaseActivity<T : ViewDataBinding, M : BaseViewModel> : DaggerAppCompatActivity() {
 
-    protected lateinit var binding: T
+    protected var binding: T? = null
     protected lateinit var viewModel: M
 
     @Inject
@@ -39,7 +40,7 @@ abstract class BaseActivity<T : ViewDataBinding, M : BaseViewModel> : DaggerAppC
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, layoutRes());
-        binding.lifecycleOwner = this
+        binding?.lifecycleOwner = this
         viewModel = ViewModelProvider(this, viewModelFactory).get(viewModelClass())
         initView()
         viewModel.viewState.observe(this, Observer { viewState ->
@@ -79,6 +80,19 @@ abstract class BaseActivity<T : ViewDataBinding, M : BaseViewModel> : DaggerAppC
     override fun onStop() {
         super.onStop()
         NetworkEvent.unregister(this)
+    }
+
+    override fun onDestroy() {
+        if (binding != null) {
+            binding?.unbind()
+            binding = null
+        }
+        super.onDestroy()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Timber.d("onBackPressed in activity")
     }
 
 }

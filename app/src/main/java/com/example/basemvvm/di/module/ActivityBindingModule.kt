@@ -1,9 +1,7 @@
 package com.example.basemvvm.di.module
 
-import androidx.lifecycle.ViewModelProvider
-import com.example.basemvvm.di.util.ViewModelFactory
+import com.example.basemvvm.ui.home.HomeFragment
 import com.example.basemvvm.ui.main.MainActivity
-import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -12,5 +10,8 @@ abstract class ActivityBindingModule {
 
     @ContributesAndroidInjector
     abstract fun bindMainActivity(): MainActivity
+
+    @ContributesAndroidInjector
+    abstract fun bindHomeFragment(): HomeFragment
 
 }
